@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:seller_app/pages/home.dart';
 import 'package:seller_app/provider/sellerProvider.dart';
+import 'package:seller_app/provider/shopProvider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -28,9 +29,16 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final sellerId = data['seller_id'];
+      final shopId = data.containsKey('shop_id') ? data['shop_id'] : null;
 
       // Store sellerId using the Provider
       Provider.of<SellerProvider>(context, listen: false).sellerId = sellerId;
+
+      // If shopId exists, store it using the ShopProvider
+      if (shopId != null) {
+        Provider.of<ShopProvider>(context, listen: false).shopId = shopId;
+      }
+      print(shopId);
 
       Navigator.push(
         context,

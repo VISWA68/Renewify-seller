@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:seller_app/provider/sellerProvider.dart';
 import 'package:seller_app/provider/shopProvider.dart';
 
 class AddProductPage extends StatefulWidget {
@@ -24,12 +25,14 @@ class _AddProductPageState extends State<AddProductPage> {
     });
 
     final shopId = Provider.of<ShopProvider>(context, listen: false).shopId;
-
+    final sellerId =
+        Provider.of<SellerProvider>(context, listen: false).sellerId;
     final response = await http.post(
-      Uri.parse('http://192.168.234.231:8000/product'),
+      Uri.parse('http://192.168.234.231:8000/add_product'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'shop_id': shopId,
+        'seller_id': sellerId,
         'name': _productNameController.text,
         'description': _descriptionController.text,
         'price': _priceController.text,
