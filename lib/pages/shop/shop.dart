@@ -28,7 +28,7 @@ class _AddShopPageState extends State<AddShopPage> {
         Provider.of<SellerProvider>(context, listen: false).sellerId;
 
     final response = await http.post(
-      Uri.parse('http://192.168.234.231:8000/shop'),
+      Uri.parse('http://192.168.234.231:8000/add_shop'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'seller_id': sellerId,
