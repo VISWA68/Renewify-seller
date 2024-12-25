@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       if (shopId != null) {
         Provider.of<ShopProvider>(context, listen: false).shopId = shopId;
       }
-      print(shopId); 
+      print(shopId);
 
       Navigator.push(
         context,
@@ -55,29 +55,82 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height; // Define the height variable
+
     return Scaffold(
       appBar: AppBar(title: const Text('Renewify Seller - Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+            ClipPath(
+              clipper: MyClipper(),
+              child: Container(
+                width: double.infinity,
+                height: height * 0.4,
+                color: const Color.fromARGB(219, 201, 235, 206),
+                child: const Center(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: login,
-              child: const Text('Login'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              child: Column(
+                children: [
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: login,
+                    child: const Text('Login'),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+}
+
+class MyClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..lineTo(0, size.height - 50)
+      ..quadraticBezierTo(
+        size.width / 4,
+        size.height - 40,
+        size.width / 2,
+        size.height - 20,
+      )
+      ..quadraticBezierTo(
+        3 / 4 * size.width,
+        size.height,
+        size.width,
+        size.height - 30,
+      )
+      ..lineTo(size.width, 0);
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
   }
 }

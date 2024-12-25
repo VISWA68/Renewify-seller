@@ -52,62 +52,103 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height; // Define the height variable
     return Scaffold(
       appBar: AppBar(title: const Text('Renewify Seller Dashboard')),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : sellerData == null
               ? const Center(child: Text('No seller data found'))
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome, ${sellerData!['name']}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+              : Stack(
+                  children: [
+                    ClipPath(
+                      clipper: MyClipper(),
+                      child: Container(
+                        width: double.infinity,
+                        height: height * 0.8,
+                        color: const Color.fromARGB(219, 201, 235, 206),
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Phone number:  ${sellerData!['phone']}',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 120), // Adjusted spacing below the clipper
+                          Text(
+                            'Welcome, ${sellerData!['name']}',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Phone number:  ${sellerData!['phone']}',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddShopPage(),
+                                  ));
+                            },
+                            child: const Text('Add shop'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ShopPage(),
+                                  ));
+                            },
+                            child: const Text('Manage shop'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddProductPage(),
+                                  ));
+                            },
+                            child: const Text('Add products'),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddShopPage(),
-                              ));
-                        },
-                        child: const Text('Add shop'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ShopPage(),
-                              ));
-                        },
-                        child: const Text('Manage shop'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddProductPage(),
-                              ));
-                        },
-                        child: const Text('Add products'),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
     );
   }
 }
+
+class MyClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..lineTo(0, size.height - 150) // Lowered the starting point
+      ..quadraticBezierTo(
+        size.width / 4,
+        size.height - 80, // Lowered the first control point
+        size.width / 2,
+        size.height - 60, // Lowered the second control point
+      )
+      ..quadraticBezierTo(
+        3 / 4 * size.width,
+        size.height - 40, // Lowered the third control point
+        size.width,
+        size.height - 20, // Lowered the end point
+      )
+      ..lineTo(size.width, 0);
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+}
+
