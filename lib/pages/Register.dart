@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:seller_app/pages/login.dart';
@@ -19,7 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> login() async {
     final response = await http.post(
-      Uri.parse('http://192.168.234.231:8000/register'),
+      Uri.parse('http://192.168.29.235:8000/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'name': nameController.text,
@@ -42,52 +41,123 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Renewify Seller')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text("Register"),
-            const SizedBox(
-              height: 20,
+      resizeToAvoidBottomInset: true, // Allows layout to adjust when keyboard is shown
+      body: Stack(
+        children: [
+          // Bézier curve background
+          ClipPath(
+            clipper: MyClipper(),
+            child: Container(
+              width: double.infinity,
+              height: height * 0.5,
+              color: const Color.fromARGB(219, 201, 235, 206),
+              child: Transform.translate(
+                offset: const Offset(0, -40),
+                child: const Center(
+                  child: Text(
+                    "Register",
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'User Name'),
+          ),
+
+          // Wrap Column with SingleChildScrollView
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 225),
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'User Name',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: numberController,
+                    decoration: const InputDecoration(
+                      labelText: 'Mobile Number',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: login,
+                    child: const Text('Register'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
+                    child: const Text('Login'),
+                  ),
+                ],
+              ),
             ),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: numberController,
-              decoration: const InputDecoration(labelText: 'Mobile Number'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: login,
-              child: const Text('Register'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
-              },
-              child: const Text('Login'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+}
+
+class MyClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return Path()
+      ..lineTo(0, size.height - 50)
+      ..quadraticBezierTo(
+        size.width / 4,
+        size.height - 40,
+        size.width / 2,
+        size.height - 20,
+      )
+      ..quadraticBezierTo(
+        3 / 4 * size.width,
+        size.height,
+        size.width,
+        size.height - 30,
+      )
+      ..lineTo(size.width, 0);
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
   }
 }

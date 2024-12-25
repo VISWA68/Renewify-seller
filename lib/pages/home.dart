@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         Provider.of<SellerProvider>(context, listen: false).sellerId;
 
     final response = await http.get(
-      Uri.parse('http://192.168.234.231:8000/seller/$sellerId'),
+      Uri.parse('http://192.168.29.235:8000/seller/$sellerId'),
     );
 
     if (response.statusCode == 200) {

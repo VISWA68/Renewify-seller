@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> login() async {
     final response = await http.post(
-      Uri.parse('http://192.168.234.231:8000/login'),
+      Uri.parse('http://192.168.29.235:8000/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': emailController.text,
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       if (shopId != null) {
         Provider.of<ShopProvider>(context, listen: false).shopId = shopId;
       }
-      print(shopId);
+      print(shopId); 
 
       Navigator.push(
         context,

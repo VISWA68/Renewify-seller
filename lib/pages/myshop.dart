@@ -28,7 +28,7 @@ class _ShopPageState extends State<ShopPage> {
 
     try {
       final response = await http.get(
-        Uri.parse('http://192.168.234.231:8000/shops/$sellerId'),
+        Uri.parse('http://192.168.29.235:8000/shops/$sellerId'),
       );
 
       if (response.statusCode == 200) {
